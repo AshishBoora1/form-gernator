@@ -15,21 +15,12 @@ const FormComp = () => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
 
-  const updateQuestionText = (index, value) => {
+  const onHandelQuestionTypes = (index, value, type) => {
     const updated = [...questions];
-    updated[index].text = value;
-    setQuestions(updated);
-  };
-  
-  const updateQuestionImage = (index, value) => {
-    const updated = [...questions];
-    updated[index].image = value;
-    setQuestions(updated);
-  };
-
-  const onhandelUpdaterequired = (index, value) => {
-    const updated = [...questions];
-    updated[index].required = !value;
+    if (type === "text") updated[index].text = value;
+    else if (type === "image") updated[index].image = value;
+    else if (type === "required") updated[index].required = !value;
+    else console.log("type not pass");
     setQuestions(updated);
   };
 
@@ -117,7 +108,7 @@ const FormComp = () => {
                         required
                         value={questions.text}
                         onChange={(e) =>
-                          updateQuestionText(index, e.target.value)
+                          onHandelQuestionTypes(index, e.target.value, "text")
                         }
                         name="name"
                       />
@@ -202,7 +193,11 @@ const FormComp = () => {
                     <div className=" flex justify-center items-center pb-3 pt-10">
                       <input
                         onChange={(e) =>
-                          updateQuestionImage(index, e.target.files[0])
+                          onHandelQuestionTypes(
+                            index,
+                            e.target.files[0],
+                            "image"
+                          )
                         }
                         type="file"
                         id="image"
@@ -250,7 +245,11 @@ const FormComp = () => {
                           <input
                             type="checkbox"
                             onClick={() =>
-                              onhandelUpdaterequired(index, value.required)
+                              onHandelQuestionTypes(
+                                index,
+                                value.required,
+                                "required"
+                              )
                             }
                             checked={value.required}
                             className="sr-only peer"
