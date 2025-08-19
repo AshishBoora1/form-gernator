@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FormComp from "../Components/FormComp";
+import FormComp from "./pages/FormComp";
 
 function App() {
 
