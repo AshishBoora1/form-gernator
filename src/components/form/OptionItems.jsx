@@ -11,7 +11,7 @@ function OptionItems({
   onhandeloptionchange,
 }) {
   return (
-    <div key={oindex} className="flex items-center gap-3 mt-3">
+    <>
       <InputComp
         value={ovalue}
         type="text"
@@ -30,7 +30,7 @@ function OptionItems({
           <CrossIcon />
         </button>
       )}
-    </div>
+    </>
   );
 }
 

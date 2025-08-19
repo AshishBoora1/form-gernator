@@ -11,9 +11,10 @@ function QuestionItem({
   return (
     <div className="flex gap-5 items-end mt-5">
       <div className="flex flex-col gap-2 w-full">
-        <LabelComp text={`Question${index + 1}`} htmlFor={index + 1}>
+        <div>
+          <LabelComp text={`Question ${index + 1}`} htmlFor={index + 1} />
           {value.required && <span className="text-red-600 ml-1">*</span>}
-        </LabelComp>
+        </div>
         <InputComp
           type="text"
           value={value.text}
@@ -27,7 +28,6 @@ function QuestionItem({
 
       <div>
         <select
-          value={value.type}
           onChange={(e) => updateQuestionType(index, e.target.value)}
           className="border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 shadow-sm"
         >

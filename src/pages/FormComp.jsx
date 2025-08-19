@@ -6,87 +6,20 @@ import QuestionControls from "../components/form/QuestionControls";
 import { GetDataFromStorage, SaveDataToStorage } from "../utils/storage";
 import QuestionItem from "../components/form/QuestionItem";
 import OptionItems from "../components/form/OptionItems";
+import { useQuestion } from "../hooks/useQuestion";
 
 const FormComp = () => {
-  const [questions, setQuestions] = useState([]);
 
-  // ADD QUESTION
-
-  const onHandelAddQuestion = () => {
-    setQuestions([
-      ...questions,
-      {
-        required: false,
-        text: "",
-        type: "text",
-        options: [""],
-        image: "",
-        id: Math.random().toString(36).slice(2, 14),
-      },
-    ]);
-  };
-
-  // REMOVE QUESTION
-
-  const onHandelremoveQuestion = (id) => {
-    setQuestions(questions.filter((v) => v.id !== id));
-    SaveDataToStorage("questions", questions);
-  };
-
-  // CHANGE QUESTION TYPES
-
-  const onHandelQuestionTypes = (index, value, type) => {
-    setQuestions((prev) => {
-      const updated = [...prev];
-      updated[index][type] = value;
-      return updated;
-    });
-  };
-
-  // UPDATE QUESTION
-
-  const updateQuestionType = (index, value) => {
-    const updated = [...questions];
-    updated[index].type = value;
-    if (value !== "checkbox") updated[index].options = [""];
-    setQuestions(updated);
-  };
-
-  // UPDATE OPTION
-
-  function onhandeloptionchange(qindex, oindex, value) {
-    setQuestions((prev) => {
-      const updated = [...prev];
-      updated[qindex].options[oindex] = value;
-      return updated;
-    });
-  }
-
-  // ADD OPTION
-
-  function onHandelAddOption(index) {
-    setQuestions((prev) => {
-      const updated = [...prev];
-      updated[index].options.push("");
-      return updated;
-    });
-  }
-
-  // REMOVE OPTION
-
-  function onHandelRemoveOption(oindex, qindex) {
-    const updated = [...questions];
-    updated[qindex].options = updated[qindex].options.filter(
-      (_, i) => i !== oindex
-    );
-    setQuestions(updated);
-  }
-
-  // GET QUESTION
-
-  useEffect(() => {
-    setQuestions(GetDataFromStorage("questions"));
-  }, []);
+  const {
+    onHandelAddQuestion,
+    questions,
+    onHandelremoveQuestion,
+    onHandelQuestionTypes,
+    updateQuestionType,
+    onhandeloptionchange,
+    onHandelAddOption,
+    onHandelRemoveOption,
+  } = useQuestion();
 
   return (
     <div className="flex items-center py-12 flex-col min-h-screen w-full bg-gradient-to-tr from-[#fdfbfb] via-[#ebedee] to-[#dfe9f3]">
@@ -111,7 +44,6 @@ const FormComp = () => {
           </div>
 
           {/* Dynamic Questions */}
-          
           {questions.map((value, index) => (
             <div
               key={value.id}
@@ -129,14 +61,16 @@ const FormComp = () => {
               {value.type === "checkbox" && (
                 <div className="mt-4">
                   {value.options.map((ovalue, oindex) => (
-                    <OptionItems
-                      oindex={oindex}
-                      ovalue={ovalue}
-                      index={index}
-                      onhandeloptionchange={onhandeloptionchange}
-                      onHandelRemoveOption={onHandelRemoveOption}
-                      value={value}
-                    />
+                    <div key={oindex} className="flex items-center gap-3 mt-3">
+                      <OptionItems
+                        oindex={oindex}
+                        ovalue={ovalue}
+                        index={index}
+                        onhandeloptionchange={onhandeloptionchange}
+                        onHandelRemoveOption={onHandelRemoveOption}
+                        value={value}
+                      />
+                    </div>
                   ))}
                   <button
                     type="button"
@@ -161,18 +95,20 @@ const FormComp = () => {
 
               {/*            Single Inputs         */}
 
-              {value.type !== "checkbox" && value.type !== "image" && (
-                <InputComp
-                  value={value.options[0]}
-                  type={value.type}
-                  classname="w-full mt-5"
-                  placeholder="Enter your answer..."
-                  required={value.required}
-                  onHandelChange={(e) =>
-                    onhandeloptionchange(index, 0, e.target.value)
-                  }
-                />
-              )}
+              {value.type &&
+                value.type !== "checkbox" &&
+                value.type !== "image" && (
+                  <InputComp
+                    value={value.options[0]}
+                    type={value.type}
+                    classname="w-full mt-5"
+                    placeholder="Enter your answer..."
+                    required={value.required}
+                    onHandelChange={(e) =>
+                      onhandeloptionchange(index, 0, e.target.value)
+                    }
+                  />
+                )}
 
               {/*            Bottom Controls           */}
 

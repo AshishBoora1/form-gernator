@@ -22,7 +22,7 @@ const QuestionControls = ({
           type="checkbox"
           readOnly
           onClick={() =>
-            onHandelQuestionTypes(index, value.required, "required")
+            onHandelQuestionTypes(index, !value.required, "required")
           }
           checked={value.required}
           className="sr-only peer"
