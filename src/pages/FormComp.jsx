@@ -10,6 +10,8 @@ import OptionItems from "../components/form/OptionItems";
 const FormComp = () => {
   const [questions, setQuestions] = useState([]);
 
+  // ADD QUESTION
+
   const onHandelAddQuestion = () => {
     setQuestions([
       ...questions,
@@ -24,19 +26,24 @@ const FormComp = () => {
     ]);
   };
 
+  // REMOVE QUESTION
+
   const onHandelremoveQuestion = (id) => {
-    let filterquestion = questions.filter((v) => v.id !== id);
-    setQuestions(filterquestion);
+    setQuestions(questions.filter((v) => v.id !== id));
     SaveDataToStorage("questions", questions);
   };
 
+  // CHANGE QUESTION TYPES
+
   const onHandelQuestionTypes = (index, value, type) => {
-    const updated = [...questions];
-    if (type === "text") updated[index].text = value;
-    else if (type === "image") updated[index].image = value;
-    else if (type === "required") updated[index].required = !value;
-    setQuestions(updated);
+    setQuestions((prev) => {
+      const updated = [...prev];
+      updated[index][type] = value;
+      return updated;
+    });
   };
+
+  // UPDATE QUESTION
 
   const updateQuestionType = (index, value) => {
     const updated = [...questions];
@@ -45,17 +52,27 @@ const FormComp = () => {
     setQuestions(updated);
   };
 
+  // UPDATE OPTION
+
   function onhandeloptionchange(qindex, oindex, value) {
-    const updated = [...questions];
-    updated[qindex].options[oindex] = value;
-    setQuestions(updated);
+    setQuestions((prev) => {
+      const updated = [...prev];
+      updated[qindex].options[oindex] = value;
+      return updated;
+    });
   }
 
+  // ADD OPTION
+
   function onHandelAddOption(index) {
-    const updated = [...questions];
-    updated[index].options.push("");
-    setQuestions(updated);
+    setQuestions((prev) => {
+      const updated = [...prev];
+      updated[index].options.push("");
+      return updated;
+    });
   }
+
+  // REMOVE OPTION
 
   function onHandelRemoveOption(oindex, qindex) {
     const updated = [...questions];
@@ -64,6 +81,8 @@ const FormComp = () => {
     );
     setQuestions(updated);
   }
+
+  // GET QUESTION
 
   useEffect(() => {
     setQuestions(GetDataFromStorage("questions"));
@@ -92,6 +111,7 @@ const FormComp = () => {
           </div>
 
           {/* Dynamic Questions */}
+          
           {questions.map((value, index) => (
             <div
               key={value.id}
